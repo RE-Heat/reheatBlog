@@ -2,8 +2,13 @@ package com.reheat.reheatlog.controller;
 
 import com.reheat.reheatlog.request.PostCreate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,9 +28,8 @@ public class PostController {
 //    }
 
     @PostMapping("/posts")
-    public String post(@RequestBody PostCreate params) {
-        log.info("params={}", params.toString());
-        return "Hello World";
+    public Map<String, String> post(@RequestBody @Validated PostCreate params) {
+        return Map.of();
     }
 
 
