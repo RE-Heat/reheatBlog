@@ -1,14 +1,12 @@
 package com.reheat.reheatlog.controller;
 
 import com.reheat.reheatlog.request.PostCreate;
+import com.reheat.reheatlog.response.PostResponse;
 import com.reheat.reheatlog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -29,6 +27,11 @@ public class PostController {
 //        return "post 성공!";
 //    }
 
+    @GetMapping("/posts")
+    public String get() {
+        return "Hello World";
+    }
+
     @PostMapping("/posts")
     public void post(@RequestBody @Validated PostCreate request) {
         //Case1 저장한 데이터 Entity -> response로 응답하기
@@ -42,8 +45,15 @@ public class PostController {
         postService.write(request);
     }
 
-    @GetMapping("/posts")
-    public String get() {
-        return "Hello World";
+    /**
+     * /posts-> 글 전체 조회(검색 + 페이징)
+     * /posts/{postId} -> 글 단건 조회
+     */
+
+    @GetMapping("/posts/{postId}")
+    public PostResponse get(@PathVariable Long postId) {
+        PostResponse response = postService.get(postId);
+        return response;
     }
+
 }
