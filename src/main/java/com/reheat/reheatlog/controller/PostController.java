@@ -1,36 +1,22 @@
 package com.reheat.reheatlog.controller;
 
 import com.reheat.reheatlog.request.PostCreate;
+import com.reheat.reheatlog.request.PostEdit;
 import com.reheat.reheatlog.response.PostResponse;
 import com.reheat.reheatlog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-    //GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
-    //글 등록은 POST
-//    @PostMapping("/posts")
-//    public String post(@RequestParam String title, @RequestParam String content) {
-//        log.info("title={}, content={}", title, content);
-//        return "post 성공!";
-//    }
-
-//    @PostMapping("/posts")
-//    public String post(@RequestParam Map<String, String> params) {
-//        return "post 성공!";
-//    }
-
-    @GetMapping("/posts")
-    public String get() {
-        return "Hello World";
-    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Validated PostCreate request) {
@@ -42,18 +28,34 @@ public class PostController {
         //          -> 서버에서 유연하게 대응하는 게 좋다.
         //          -> 한 번에 일괄적으로 잘 처리되는 케이스가 없다. 잘 관리하는 형태가 중요하다.
 
+        request.validate();
+
+        //부적절한 언어 제외
+
         postService.write(request);
     }
 
-    /**
-     * /posts-> 글 전체 조회(검색 + 페이징)
-     * /posts/{postId} -> 글 단건 조회
-     */
-
+    //단건 조회
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
-        PostResponse response = postService.get(postId);
-        return response;
+        return postService.get(postId);
     }
 
+    //여러 건 조회
+    @GetMapping("/posts")
+    public List<PostResponse> getList(Pageable pageable){
+        return postService.getList(pageable);
+    }
+
+    //게시글 수정
+    @PatchMapping("/posts/{postId}")
+    public PostResponse edit(@PathVariable Long postId, @RequestBody PostEdit request){
+        return postService.edit(postId, request);
+    }
+
+    //게시글 삭제
+    @DeleteMapping("/posts/{postId}")
+    public void delete(@PathVariable Long postId){
+        postService.delete(postId);
+    }
 }
