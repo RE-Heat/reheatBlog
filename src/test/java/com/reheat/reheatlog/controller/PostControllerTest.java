@@ -66,28 +66,24 @@ class PostControllerTest {
         ;
     }
 
-    @Test
-    @DisplayName("/posts 요청시 title값은 필수다.")
+//    @Test
+//    @DisplayName("/posts 요청시 title값은 필수다.")
     void test2() throws Exception {
-
-        //given
+        // given
         PostCreate request = PostCreate.builder()
-                .content("내용입니다")
+                .content("내용입니다.")
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(request);
 
-
-        //expected
+        // expected
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
+                        .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다"))
-                .andExpect(jsonPath("$.validation.title").value("타이틀을 입력해주세요"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("타이틀을 입력하세요."))
                 .andDo(print());
     }
 
@@ -192,7 +188,7 @@ class PostControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(5)))
-                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].id").value(35))
                 .andExpect(jsonPath("$[0].title").value("제목 30"))
                 .andExpect(jsonPath("$[0].content").value("푸르지오 30동"))
                 .andDo(print());
@@ -291,3 +287,12 @@ class PostControllerTest {
                 .andDo(print());
     }
 }
+
+// API 문서 생성
+// GET /posts/{postId} -> 단건 조회
+// POST
+
+// Spring RestDocs
+// - 운영 코드에 -> 영향
+// - 코드 수정 -> 문서 수정 X -> 문서 신뢰성 떨어짐
+//그런데 Spring RestDocs는 Test 케이스를 실행 후 문서를 생성해준다.

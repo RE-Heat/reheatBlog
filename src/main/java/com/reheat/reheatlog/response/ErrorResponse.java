@@ -8,11 +8,11 @@ import java.util.Map;
 
 /**
  * {
- *     "code" : "400",
- *     "message": "잘못된 요청입니다",
- *     "validation":{
- *         "title": "값을 입력해주세요"
- *     }
+ * "code" : "400",
+ * "message": "잘못된 요청입니다",
+ * "validation":{
+ * "title": "값을 입력해주세요"
+ * }
  * }
  */
 
@@ -33,6 +33,5 @@ public class ErrorResponse {
     public void addValidation(String fieldName, String errorMessage) {
         this.validation.put(fieldName, errorMessage);
     }
-
 
 }
