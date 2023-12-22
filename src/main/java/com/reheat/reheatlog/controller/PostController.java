@@ -20,15 +20,15 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/foo")
-    public String foo(UserSession userSession){
-        log.info(">>>{}", userSession.name);
-        return userSession.name;
+    public Long foo(UserSession userSession){
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
     }
 
     @GetMapping("/bar")
-    public String bar(UserSession userSession){
-        log.info(">>>{}", userSession.name);
-        return userSession.name;
+    public Long bar(UserSession userSession){
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
     }
 
 
