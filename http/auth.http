@@ -1,0 +1,9 @@
+### 로그인
+
+POST http://localhost:8081/auth/login
+Content-Type: application/json
+
+{
+    "email": "reheat1540@gmail.com",
+    "password": "1234"
+}
