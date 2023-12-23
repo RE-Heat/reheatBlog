@@ -1,43 +1,41 @@
 package com.reheat.reheatlog.controller;
 
+import com.reheat.reheatlog.config.AppConfig;
 import com.reheat.reheatlog.request.Login;
+import com.reheat.reheatlog.response.SessionResponse;
 import com.reheat.reheatlog.service.AuthService;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
+import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
-
+    private final AppConfig appConfig;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
-        String accessToken = authService.signIn(login);
+    public SessionResponse login(@RequestBody Login login) {
+        Long userId = authService.signIn(login);
 
-        ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
-                .domain("localhost") //todo 서버 환경에 따른 분리 필요
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(Duration.ofDays(30))
-                .sameSite("Strict")
-                .build();
+        SecretKey key = appConfig.getJwtKey();
 
-        log.info(">>>> cookie={}", cookie.toString());
+        String jws = Jwts.builder()
+                .subject(String.valueOf(userId))
+                .signWith(key)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 3600 * 1000)) // ms * 1000
+                .compact();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+        assert Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject().equals(String.valueOf(userId));
+
+        return new SessionResponse(jws);
     }
 }
