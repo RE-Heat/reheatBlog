@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public void singup(@RequestBody Signup signup) {
+    public void signup(@RequestBody Signup signup) {
         authService.signup(signup);
     }
 }
