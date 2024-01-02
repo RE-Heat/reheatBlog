@@ -1,6 +1,5 @@
 package com.reheat.reheatlog.controller;
 
-import com.reheat.reheatlog.config.data.UserSession;
 import com.reheat.reheatlog.request.PostCreate;
 import com.reheat.reheatlog.request.PostEdit;
 import com.reheat.reheatlog.response.PostResponse;
@@ -18,19 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession){
-//        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
-
-    @GetMapping("/bar")
-    public Long bar(UserSession userSession){
-        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
-
 
     @PostMapping("/posts")
     public void post(@RequestBody @Validated PostCreate request) {
