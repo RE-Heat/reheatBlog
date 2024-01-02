@@ -2,6 +2,7 @@ package com.reheat.reheatlog.controller;
 
 import com.reheat.reheatlog.config.AppConfig;
 import com.reheat.reheatlog.request.Login;
+import com.reheat.reheatlog.request.Signup;
 import com.reheat.reheatlog.response.SessionResponse;
 import com.reheat.reheatlog.service.AuthService;
 import io.jsonwebtoken.Jwts;
@@ -37,5 +38,10 @@ public class AuthController {
         assert Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject().equals(String.valueOf(userId));
 
         return new SessionResponse(jws);
+    }
+
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody Signup signup){
+        authService.signup(signup);
     }
 }

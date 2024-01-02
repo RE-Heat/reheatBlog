@@ -34,6 +34,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
+	//Spring Security Crpyto
+	implementation 'org.springframework.security:spring-security-crypto'
+	//jdk15on
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 	testImplementation 'junit:junit:4.13.1'
 
