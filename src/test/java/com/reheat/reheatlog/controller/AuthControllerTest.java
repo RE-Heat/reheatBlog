@@ -6,6 +6,7 @@ import com.reheat.reheatlog.domain.User;
 import com.reheat.reheatlog.repository.SessionRepository;
 import com.reheat.reheatlog.repository.UserRepository;
 import com.reheat.reheatlog.request.Login;
+import com.reheat.reheatlog.request.Signup;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -172,6 +173,26 @@ class AuthControllerTest {
                         .header("Authorization", session.getAccessToken() + "-other")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원가입 성공")
+    void test6() throws Exception {
+        //given
+        Signup signup = Signup.builder()
+                .email("reheat1540@gmail.com")
+                .password("1234")
+                .name("리히트")
+                .build();
+
+        //expected
+        String json = objectMapper.writeValueAsString(signup);
+
+        mockMvc.perform(post("/auth/signup")
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }
