@@ -1,4 +1,4 @@
-package com.reheat.reheatlog.request;
+package com.reheat.reheatlog.request.post;
 
 import lombok.*;
 

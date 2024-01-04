@@ -1,4 +1,4 @@
-package com.reheat.reheatlog.repository;
+package com.reheat.reheatlog.repository.post;
 
 import com.reheat.reheatlog.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

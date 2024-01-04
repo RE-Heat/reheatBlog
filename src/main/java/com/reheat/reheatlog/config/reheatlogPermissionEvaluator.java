@@ -1,7 +1,7 @@
 package com.reheat.reheatlog.config;
 
 import com.reheat.reheatlog.exception.PostNotFound;
-import com.reheat.reheatlog.repository.PostRepository;
+import com.reheat.reheatlog.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.PermissionEvaluator;

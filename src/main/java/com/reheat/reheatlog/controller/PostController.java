@@ -1,8 +1,8 @@
 package com.reheat.reheatlog.controller;
 
 import com.reheat.reheatlog.config.UserPrincipal;
-import com.reheat.reheatlog.request.PostCreate;
-import com.reheat.reheatlog.request.PostEdit;
+import com.reheat.reheatlog.request.post.PostCreate;
+import com.reheat.reheatlog.request.post.PostEdit;
 import com.reheat.reheatlog.response.PostResponse;
 import com.reheat.reheatlog.service.PostService;
 import lombok.RequiredArgsConstructor;

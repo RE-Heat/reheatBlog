@@ -1,4 +1,4 @@
-package com.reheat.reheatlog.request;
+package com.reheat.reheatlog.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
