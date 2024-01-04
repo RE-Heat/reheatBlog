@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.snippet.Attributes;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -67,6 +68,7 @@ public class PostControllerDocTest {
     }
 
     @Test
+    @WithMockUser(username = "reheat1540@gmail.com", roles = {"ADMIN"})
     @DisplayName("글 등록")
     void test2() throws Exception {
         //given
