@@ -1,5 +1,6 @@
 package com.reheat.reheatlog.controller;
 
+import com.reheat.reheatlog.config.UserPrincipal;
 import com.reheat.reheatlog.request.PostCreate;
 import com.reheat.reheatlog.request.PostEdit;
 import com.reheat.reheatlog.response.PostResponse;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +23,13 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
-    public void post(@RequestBody @Validated PostCreate request) {
+    public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Validated PostCreate request) {
         //인증
         //1. get Parameter -> ?? 이걸로 !
         //2. Post value?
         //3. Header
 
-        postService.write(request);
+        postService.write(userPrincipal.getUserId(), request);
     }
 
     //단건 조회
@@ -50,7 +52,8 @@ public class PostController {
     }
 
     //게시글 삭제
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);

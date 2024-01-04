@@ -3,7 +3,9 @@ package com.reheat.reheatlog.service;
 import com.reheat.reheatlog.domain.Post;
 import com.reheat.reheatlog.domain.PostEditor;
 import com.reheat.reheatlog.exception.PostNotFound;
+import com.reheat.reheatlog.exception.UserNotFound;
 import com.reheat.reheatlog.repository.PostRepository;
+import com.reheat.reheatlog.repository.UserRepository;
 import com.reheat.reheatlog.request.PostCreate;
 import com.reheat.reheatlog.request.PostEdit;
 import com.reheat.reheatlog.response.PostResponse;
@@ -22,9 +24,14 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public void write(PostCreate postCreate) {
+    public void write(Long userId, PostCreate postCreate) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFound());
+
         Post post = Post.builder()
+                .user(user)
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
                 .build();
