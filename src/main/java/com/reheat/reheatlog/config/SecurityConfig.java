@@ -5,6 +5,7 @@ import com.reheat.reheatlog.config.filter.EmailPasswordAuthFilter;
 import com.reheat.reheatlog.config.handler.Http401Handler;
 import com.reheat.reheatlog.config.handler.Http403Handler;
 import com.reheat.reheatlog.config.handler.LoginFailHandler;
+import com.reheat.reheatlog.config.handler.LoginSuccessHandler;
 import com.reheat.reheatlog.domain.User;
 import com.reheat.reheatlog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -22,7 +24,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
@@ -32,6 +33,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @Slf4j
 @Configuration
 @EnableWebSecurity(debug = true)
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -50,11 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/login").permitAll()
-                .requestMatchers("/auth/signup").permitAll()
-                .requestMatchers("/user").hasRole("USER")
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(usernamePasswordAuthenticationFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> {
@@ -75,7 +73,7 @@ public class SecurityConfig {
         EmailPasswordAuthFilter filter = new EmailPasswordAuthFilter("/auth/login", objectMapper);
 
         filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));//성공 시 경로
+        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));//성공 시
         filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));//실패 시 예외 throw
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository()); //인증 완료 시 요청이 유효하도록 함!
 

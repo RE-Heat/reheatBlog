@@ -14,7 +14,7 @@ public class UserPrincipal extends User {
     public UserPrincipal(com.reheat.reheatlog.domain.User user) {
         super(user.getEmail(), user.getPassword(),
                 List.of(
-                        new SimpleGrantedAuthority("ROLE_USER")
+                        new SimpleGrantedAuthority("ROLE_ADMIN")
                 ));
 
         this.userId = user.getId();
