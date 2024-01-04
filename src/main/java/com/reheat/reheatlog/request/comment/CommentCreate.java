@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-@Data
-@ToString
+@Getter
 @NoArgsConstructor
 public class CommentCreate {
     @Length(min = 1, max = 8, message = "작성자는 1~8글자까지 입력해주세요")
