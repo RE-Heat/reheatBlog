@@ -1,9 +1,13 @@
 package com.reheat.reheatlog.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reheat.reheatlog.annotation.ReheatlogMockUser;
 import com.reheat.reheatlog.domain.Post;
+import com.reheat.reheatlog.domain.User;
 import com.reheat.reheatlog.repository.PostRepository;
+import com.reheat.reheatlog.repository.UserRepository;
 import com.reheat.reheatlog.request.PostCreate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.snippet.Attributes;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -38,15 +41,33 @@ public class PostControllerDocTest {
     private PostRepository postRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @AfterEach
+    void clean() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("단건 조회 테스트")
     void test1() throws Exception {
         //given
+        User user = User.builder()
+                .name("게스트1")
+                .password("1234")
+                .email("guest1234@gmail.com")
+                .build();
+
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("제목")
                 .content("내용")
+                .user(user)
                 .build();
         postRepository.save(post);
 
@@ -68,7 +89,7 @@ public class PostControllerDocTest {
     }
 
     @Test
-    @WithMockUser(username = "reheat1540@gmail.com", roles = {"ADMIN"})
+    @ReheatlogMockUser
     @DisplayName("글 등록")
     void test2() throws Exception {
         //given
