@@ -1,6 +1,7 @@
 package com.reheat.reheatlog.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reheat.reheatlog.annotation.ReheatlogMockUser;
 import com.reheat.reheatlog.domain.Comment;
 import com.reheat.reheatlog.domain.Post;
 import com.reheat.reheatlog.domain.User;
@@ -97,6 +98,7 @@ class CommentControllerTest {
     }
 
     @Test
+    @ReheatlogMockUser
     @DisplayName("댓글 삭제")
     void test2() throws Exception {
         //given

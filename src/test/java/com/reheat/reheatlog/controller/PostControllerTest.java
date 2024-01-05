@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reheat.reheatlog.annotation.ReheatlogMockUser;
 import com.reheat.reheatlog.domain.Post;
 import com.reheat.reheatlog.domain.User;
-import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.repository.UserRepository;
+import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.request.post.PostCreate;
 import com.reheat.reheatlog.request.post.PostEdit;
 import org.junit.jupiter.api.AfterEach;
@@ -165,18 +165,17 @@ class PostControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
-                .andExpect(jsonPath("$[0].id").value(post1.getId()))
-                .andExpect(jsonPath("$[0].title").value("title_1"))
-                .andExpect(jsonPath("$[0].content").value("content_1"))
-                .andExpect(jsonPath("$[1].id").value(post2.getId()))
-                .andExpect(jsonPath("$[1].title").value("title_2"))
-                .andExpect(jsonPath("$[1].content").value("content_2"))
+                .andExpect(jsonPath("$[0].id").value(post2.getId()))
+                .andExpect(jsonPath("$[0].title").value("title_2"))
+                .andExpect(jsonPath("$[0].content").value("content_2"))
+                .andExpect(jsonPath("$[1].id").value(post1.getId()))
+                .andExpect(jsonPath("$[1].title").value("title_1"))
+                .andExpect(jsonPath("$[1].content").value("content_1"))
                 .andDo(print());
-
     }
 
     @Test
-    @DisplayName("글 페이징 조회")
+    @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다")
     void test6() throws Exception {
         //given
         User user = User.builder()
@@ -187,7 +186,7 @@ class PostControllerTest {
 
         userRepository.save(user);
 
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("푸르지오 " + i + "동")
@@ -197,13 +196,13 @@ class PostControllerTest {
         postRepository.saveAll(requestPosts);
 
         //expected
-        mockMvc.perform(get("/posts?page=1&sort=id,desc")
+        mockMvc.perform(get("/posts?page=0&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$.length()", is(10)))
 //                .andExpect(jsonPath("$[0].id").value(36))
-                .andExpect(jsonPath("$[0].title").value("제목 30"))
-                .andExpect(jsonPath("$[0].content").value("푸르지오 30동"))
+                .andExpect(jsonPath("$[0].title").value("제목 19"))
+                .andExpect(jsonPath("$[0].content").value("푸르지오 19동"))
                 .andDo(print());
     }
 

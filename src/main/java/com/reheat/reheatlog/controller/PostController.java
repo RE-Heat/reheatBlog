@@ -3,11 +3,11 @@ package com.reheat.reheatlog.controller;
 import com.reheat.reheatlog.config.UserPrincipal;
 import com.reheat.reheatlog.request.post.PostCreate;
 import com.reheat.reheatlog.request.post.PostEdit;
+import com.reheat.reheatlog.request.post.PostSearch;
 import com.reheat.reheatlog.response.PostResponse;
 import com.reheat.reheatlog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -40,8 +40,8 @@ public class PostController {
 
     //여러 건 조회
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
-        return postService.getList(pageable);
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 
     //게시글 수정

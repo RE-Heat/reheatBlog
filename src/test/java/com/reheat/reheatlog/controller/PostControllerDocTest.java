@@ -72,7 +72,7 @@ public class PostControllerDocTest {
         postRepository.save(post);
 
         //expected
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/posts/{postId}", 1L)
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/posts/{postId}", post.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

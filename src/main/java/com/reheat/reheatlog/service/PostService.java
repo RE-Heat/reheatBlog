@@ -4,14 +4,14 @@ import com.reheat.reheatlog.domain.Post;
 import com.reheat.reheatlog.domain.PostEditor;
 import com.reheat.reheatlog.exception.PostNotFound;
 import com.reheat.reheatlog.exception.UserNotFound;
-import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.repository.UserRepository;
+import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.request.post.PostCreate;
 import com.reheat.reheatlog.request.post.PostEdit;
+import com.reheat.reheatlog.request.post.PostSearch;
 import com.reheat.reheatlog.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,9 +53,9 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList(Pageable pageable) {
+    public List<PostResponse> getList(PostSearch postSearch) {
 
-        return postRepository.findAll(pageable).stream()
+        return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }

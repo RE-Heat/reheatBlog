@@ -3,19 +3,17 @@ package com.reheat.reheatlog.service;
 import com.reheat.reheatlog.domain.Post;
 import com.reheat.reheatlog.domain.User;
 import com.reheat.reheatlog.exception.PostNotFound;
-import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.repository.UserRepository;
+import com.reheat.reheatlog.repository.post.PostRepository;
 import com.reheat.reheatlog.request.post.PostCreate;
 import com.reheat.reheatlog.request.post.PostEdit;
+import com.reheat.reheatlog.request.post.PostSearch;
 import com.reheat.reheatlog.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,9 +100,12 @@ class PostServiceTest {
                         .content("bar")
                         .build()
         ));
-        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
         //when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         //then
         assertEquals(2L, postRepository.count());
@@ -114,7 +115,7 @@ class PostServiceTest {
     @DisplayName("글 1페이지 조회")
     public void test4() throws Exception {
         //given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("푸르지오 " + i)
@@ -122,15 +123,16 @@ class PostServiceTest {
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
 
         //when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         //then
-        assertEquals(5L, posts.size());
-        assertEquals("제목 30", posts.get(0).getTitle());
-        assertEquals("제목 26", posts.get(4).getTitle());
+        assertEquals(10L, posts.size()); //페이지 처리됐으므로 10개
+        assertEquals("제목 19", posts.get(0).getTitle()); //가장 마지막. id desc니까
     }
 
     @Test
